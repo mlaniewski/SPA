@@ -94,18 +94,6 @@ bool PKBApi::modifies(int liNr1, string varName){
 	return pkb -> getModifies() -> modifies(liNr1, varName);
 }
 
-
-bool PKBApi::next(int liNr1, int nextliNr) {
-	return pkb -> getNext() -> next(liNr1, nextliNr);
-}
-
-bool PKBApi::nextS(int liNr1, int nextliNr) {
-	return pkb -> getNext() -> nextS(liNr1, nextliNr);
-}
-
-
-
-
 bool PKBApi::parent(int parentliNr, int kidliNr){
 	return pkb -> getParent() -> parent(parentliNr, kidliNr);
 }

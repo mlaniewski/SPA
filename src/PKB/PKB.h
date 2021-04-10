@@ -8,7 +8,6 @@
 #include "AST/ASTTree.h"
 #include "Relations/Follows.h"
 #include "Relations/Modifies.h"
-#include "Relations/Next.h"
 #include "Relations/Parent.h"
 #include "Relations/Uses.h"
 #include "Relations/Uses.h"
@@ -24,7 +23,6 @@ public:
 		uses = new Uses();
 		parent = new Parent();
 		follows = new Follows();
-		next = new Next();
 		varTable = new VarTable();
 		lineTable = new LinesTable();
 		procTable = new ProcTable();
@@ -46,10 +44,6 @@ public:
 
 	Uses* getUses() {
 		return uses;
-	}
-
-	Next* getNext() {
-		return next;
 	}
 
 	ASTTree* getDrzewoAST(){
@@ -76,7 +70,6 @@ private:
 	Uses* uses = NULL;
 	Parent* parent = NULL;
 	Follows* follows = NULL;
-	Next* next = NULL;
 	ASTTree * tree = NULL;
 	VarTable * varTable = NULL;
 	LinesTable * lineTable = NULL;

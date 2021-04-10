@@ -18,7 +18,6 @@ void DesignExtractor::start() {
 	setRelacjeUses();
 	setLinieIf();
 	setTablicaProcedur();
-	setRelacjeNext();
 }
 
 void DesignExtractor::setRelacjeFollow() {
@@ -422,89 +421,5 @@ void DesignExtractor::procRecur(tree<tree_node_<ASTNode*>*>::iterator current,in
 
 		}
 		i++;
-	}
-}
-
-void DesignExtractor::setRelacjeNext() {
-	ASTTree * ASTtree = pkb->getDrzewoAST();
-	Next * next = pkb->getNext();
-
-	tree<tree_node_<ASTNode*>*>::iterator begin = ASTtree->getKorzenDrzewa();
-	tree<tree_node_<ASTNode*>*>::iterator end = ASTtree->getKoniec();
-	tree<tree_node_<ASTNode*>*>::iterator tmp;
-	tree<tree_node_<ASTNode*>*>::iterator tmp2;
-
-	while (begin != end) {
-		if (ASTtree->czyPrawidlowe(begin) && (*begin)->data) {
-			if ((*begin)->data->type == "ASSIGN") {
-				tmp = begin.node -> next_sibling;
-				if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
-					next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-				}
-				else {
-					tmp = begin.node -> parent;
-					if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
-						if((*tmp)->data->type == "WHILE") {
-							next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-						}
-						else if((*tmp)->data->type == "IF" || (*tmp)->data->type == "ELSE") {
-							while(true) {
-								if((*tmp)->data->type == "ELSE") {
-									tmp = tmp.node -> prev_sibling;
-								}
-								if(!(ASTtree->czyPrawidlowe(tmp)) || !((*tmp)->data) || (*tmp)->data->type != "IF") {
-									if((*tmp)->data->type == "WHILE") {
-										next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-									}
-									break;
-								}
-								else {
-									tmp2 = tmp.node -> next_sibling;
-									if(ASTtree->czyPrawidlowe(tmp2) && (*tmp2)->data) {
-										if((*tmp2)->data->type != "ELSE") {
-											next->addNext((*begin)->data->liNr1, (*tmp2)->data->liNr1);
-											break;
-										}
-										else {
-											tmp2 = tmp.node -> next_sibling -> next_sibling;
-											if(ASTtree->czyPrawidlowe(tmp2) && (*tmp2)->data) {
-												next->addNext((*begin)->data->liNr1, (*tmp2)->data->liNr1);
-												break;
-											}
-										}
-									}
-								}
-								tmp = tmp.node -> parent;
-							}
-						}
-					}
-				}
-			}
-			else if ((*begin)->data->type == "WHILE") {
-				tmp = begin.node -> first_child;
-				if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
-					next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-				}
-				tmp = begin.node -> next_sibling;
-				if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
-					next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-				}
-			}
-			else if ((*begin)->data->type == "IF") {
-				tmp = begin.node -> first_child;
-				if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
-					next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-				}
-				tmp2 = begin.node -> next_sibling;
-
-				if(ASTtree->czyPrawidlowe(tmp2) && (*tmp2)->data && (*tmp2)->data->type == "ELSE") {
-					tmp = tmp2.node -> first_child;
-					if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
-						next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
-					}
-				}
-			}
-		}
-		++begin;
 	}
 }

@@ -5,7 +5,6 @@ PKB::~PKB() {
 	delete uses;
 	delete parent;
 	delete follows;
-	delete next;
 	delete varTable;
 }
 
