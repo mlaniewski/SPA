@@ -63,8 +63,6 @@ vector<string> QueryEvaluator::getWynik(PQLTree *Tree) {
 					setLines.insert(tmp2.begin(),tmp2.end());
 					tmp2 = pkb->getTablicaLiniiKodu()->getLinieWhile();
 					setLines.insert(tmp2.begin(),tmp2.end());
-					tmp2 = pkb->getTablicaLiniiKodu()->getLinieCall();
-					setLines.insert(tmp2.begin(),tmp2.end());
 					tmp2 = pkb->getTablicaLiniiKodu()->getLinieIf();
 					setLines.insert(tmp2.begin(),tmp2.end());
 					std::copy(setLines.begin(), setLines.end(), std::inserter( lines, lines.end() ) );
@@ -121,21 +119,6 @@ vector<string> QueryEvaluator::getWynik(PQLTree *Tree) {
 					else {
 						lines = getUsesWynik((*begin)->data->getField1(), (*begin)->data->getField2(), lines, selectValue);
 						isUses = true;
-					}
-				}
-				// Zweryfikowanie wystąpienia relacji Calls lub Calls*
-				if ((*begin)->data->getNodeType() == "calls") {
-					//Calls z *
-					if ((*begin)->data->isStar()) {
-						lines = getCallSWynik((*begin)->data->getField1(),
-								(*begin)->data->getField2(), lines,
-								selectValue);
-					} 
-					//Calls bez *
-					else {
-						lines = getCallWynik((*begin)->data->getField1(),
-								(*begin)->data->getField2(), lines,
-								selectValue);
 					}
 				}
 
@@ -272,14 +255,7 @@ vector<int> QueryEvaluator::getModifiesWynik(Field* field1, Field* field2, vecto
 	if(field1->getTyp() == "constant" && field2->getTyp() != "constant")
 	{
 		  int param1 = field1->stringNaInt();
-		  vector<int> a = pkb->getTablicaLiniiKodu()->getLinieCall();
-		  if(find(a.begin(),a.end(),param1) != a.end())
-		  {
-		   string name = pkb->getTablicaLiniiKodu()->getWywolanaNazwaProcedury(param1);
-		   vector<int> b = pkb->getTablicaProcedur()->getLinieProcedury(pkb->getTablicaProcedur()->getIdProcedury(name));
-		   setLines1.insert(b.begin(),b.end());
-		  }
-		  else if(pkb->getTablicaProcedur()->getMaxIdProcedury() >= param1)
+		  if(pkb->getTablicaProcedur()->getMaxIdProcedury() >= param1)
 		  {
 		   string name = pkb->getTablicaProcedur()->getNazwaProcedury(param1);
 		   vector<int> b = pkb->getTablicaProcedur()->getLinieProcedury(pkb->getTablicaProcedur()->getIdProcedury(name));
@@ -348,24 +324,6 @@ vector<int> QueryEvaluator::getModifiesWynik(Field* field1, Field* field2, vecto
 				for(size_t i = 0 ; i < procLines.size() ; i++)
 				{
 					setLines1.insert(procLines[i]);
-				}
-			}
-		}
-		else if(field1->getTyp() == "call")
-		{
-			vector<int> callLinesStart = pkb->getTablicaLiniiKodu()->getLinieCall();
-			for(size_t i = 0 ; i < callLinesStart.size() ; i++)
-			{
-				string nazwaProcedury = pkb->getTablicaLiniiKodu()->getWywolanaNazwaProcedury(callLinesStart[i]);
-				int idProcedury = pkb->getTablicaProcedur()->getIdProcedury(nazwaProcedury);
-				if(idProcedury != -1)
-				{
-					vector<int> callLines = pkb->getTablicaProcedur()->getLinieProcedury(idProcedury);
-
-					for(size_t j = 0 ; j < callLines.size() ; j++)
-					{
-						setLines1.insert(callLines[j]);
-					}
 				}
 			}
 		}
@@ -465,14 +423,10 @@ vector<int> QueryEvaluator::getParentWynik(Field* field1, Field* field2, vector<
 			setLines2.insert(tmp.begin(), tmp.end());
 			tmp = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines2.insert(tmp.begin(), tmp.end());
-			tmp = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines2.insert(tmp.begin(), tmp.end());
 		} else if (field2->getTyp() == "while") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field2->getTyp() == "if") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field2->getTyp() == "call") {
-			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field2->getTyp() == "assign") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -513,14 +467,10 @@ vector<int> QueryEvaluator::getParentWynik(Field* field1, Field* field2, vector<
 			setLines2.insert(tmp.begin(), tmp.end());
 			tmp = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines2.insert(tmp.begin(), tmp.end());
-			tmp = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines2.insert(tmp.begin(), tmp.end());
 		} else if (field2->getTyp() == "while") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field2->getTyp() == "if") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field2->getTyp() == "call") {
-			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field2->getTyp() == "assign") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -575,14 +525,10 @@ vector<int> QueryEvaluator::getParentSWynik(Field* field1, Field* field2, vector
 				setLines2.insert(tmp.begin(), tmp.end());
 				tmp = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 				setLines2.insert(tmp.begin(), tmp.end());
-				tmp = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-				setLines2.insert(tmp.begin(), tmp.end());
 			} else if (field2->getTyp() == "while") {
 				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 			} else if (field2->getTyp() == "if") {
 				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-			} else if (field2->getTyp() == "call") {
-				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 			} else if (field2->getTyp() == "assign") {
 				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 			}
@@ -623,14 +569,10 @@ vector<int> QueryEvaluator::getParentSWynik(Field* field1, Field* field2, vector
 				setLines2.insert(tmp.begin(), tmp.end());
 				tmp = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 				setLines2.insert(tmp.begin(), tmp.end());
-				tmp = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-				setLines2.insert(tmp.begin(), tmp.end());
 			} else if (field2->getTyp() == "while") {
 				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 			} else if (field2->getTyp() == "if") {
 				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-			} else if (field2->getTyp() == "call") {
-				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 			} else if (field2->getTyp() == "assign") {
 				setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 			}
@@ -688,14 +630,10 @@ vector<int> QueryEvaluator::getFollowsWynik(Field* field1, Field* field2, vector
 			setLines2.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines2.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines2.insert(pom.begin(), pom.end());
 		} else if (field2->getTyp() == "while") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field2->getTyp() == "if") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field2->getTyp() == "call") {
-			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field2->getTyp() == "assign") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -711,14 +649,10 @@ vector<int> QueryEvaluator::getFollowsWynik(Field* field1, Field* field2, vector
 			setLines1.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines1.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines1.insert(pom.begin(), pom.end());
 		} else if (field1->getTyp() == "while") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field1->getTyp() == "if") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field1->getTyp() == "call") {
-			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field1->getTyp() == "assign") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -737,14 +671,10 @@ vector<int> QueryEvaluator::getFollowsWynik(Field* field1, Field* field2, vector
 			setLines1.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines1.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines1.insert(pom.begin(), pom.end());
 		} else if (field1->getTyp() == "while") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field1->getTyp() == "if") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field1->getTyp() == "call") {
-			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field1->getTyp() == "assign") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -755,14 +685,10 @@ vector<int> QueryEvaluator::getFollowsWynik(Field* field1, Field* field2, vector
 			setLines2.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines2.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines2.insert(pom.begin(), pom.end());
 		} else if (field2->getTyp() == "while") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field2->getTyp() == "if") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field2->getTyp() == "call") {
-			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field2->getTyp() == "assign") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -820,14 +746,10 @@ vector<int> QueryEvaluator::getFollowsSWynik(Field* field1, Field* field2, vecto
 			setLines2.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines2.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines2.insert(pom.begin(), pom.end());
 		} else if (field2->getTyp() == "while") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field2->getTyp() == "if") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field2->getTyp() == "call") {
-			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field2->getTyp() == "assign") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -843,14 +765,10 @@ vector<int> QueryEvaluator::getFollowsSWynik(Field* field1, Field* field2, vecto
 			setLines1.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines1.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines1.insert(pom.begin(), pom.end());
 		} else if (field1->getTyp() == "while") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field1->getTyp() == "if") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field1->getTyp() == "call") {
-			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field1->getTyp() == "assign") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -869,14 +787,10 @@ vector<int> QueryEvaluator::getFollowsSWynik(Field* field1, Field* field2, vecto
 			setLines1.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines1.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines1.insert(pom.begin(), pom.end());
 		} else if (field1->getTyp() == "while") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field1->getTyp() == "if") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field1->getTyp() == "call") {
-			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field1->getTyp() == "assign") {
 			setLines1 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -887,14 +801,10 @@ vector<int> QueryEvaluator::getFollowsSWynik(Field* field1, Field* field2, vecto
 			setLines2.insert(pom.begin(), pom.end());
 			pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 			setLines2.insert(pom.begin(), pom.end());
-			pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-			setLines2.insert(pom.begin(), pom.end());
 		} else if (field2->getTyp() == "while") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 		} else if (field2->getTyp() == "if") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-		} else if (field2->getTyp() == "call") {
-			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 		} else if (field2->getTyp() == "assign") {
 			setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
 		}
@@ -943,14 +853,7 @@ vector<int> QueryEvaluator::getUsesWynik(Field* field1, Field* field2, vector<in
 	if(field1->getTyp() == "constant" && field2->getTyp() != "constant")
 	{
 		int param1 = field1->stringNaInt();
-		vector<int> a = pkb->getTablicaLiniiKodu()->getLinieCall();
-		if(find(a.begin(),a.end(),param1) != a.end())
-		{
-			string name = pkb->getTablicaLiniiKodu()->getWywolanaNazwaProcedury(param1);
-			vector<int> b = pkb->getTablicaProcedur()->getLinieProcedury(pkb->getTablicaProcedur()->getIdProcedury(name));
-			setLines1.insert(b.begin(),b.end());
-		}
-		else if(pkb->getTablicaProcedur()->getMaxIdProcedury() >= param1)
+		if(pkb->getTablicaProcedur()->getMaxIdProcedury() >= param1)
 		{
 			string name = pkb->getTablicaProcedur()->getNazwaProcedury(param1);
 			vector<int> b = pkb->getTablicaProcedur()->getLinieProcedury(pkb->getTablicaProcedur()->getIdProcedury(name));
@@ -1019,24 +922,6 @@ vector<int> QueryEvaluator::getUsesWynik(Field* field1, Field* field2, vector<in
 				for(size_t i = 0 ; i < procLines.size() ; i++)
 				{
 					setLines1.insert(procLines[i]);
-				}
-			}
-		}
-		else if(field1->getTyp() == "call")
-		{
-			vector<int> callLinesStart = pkb->getTablicaLiniiKodu()->getLinieCall();
-			for(size_t i = 0 ; i < callLinesStart.size() ; i++)
-			{
-				string nazwaProcedury = pkb->getTablicaLiniiKodu()->getWywolanaNazwaProcedury(callLinesStart[i]);
-				int idProcedury = pkb->getTablicaProcedur()->getIdProcedury(nazwaProcedury);
-				if(idProcedury != -1)
-				{
-					vector<int> callLines = pkb->getTablicaProcedur()->getLinieProcedury(idProcedury);
-
-					for(size_t j = 0 ; j < callLines.size() ; j++)
-					{
-						setLines1.insert(callLines[j]);
-					}
 				}
 			}
 		}
@@ -1177,259 +1062,6 @@ vector<int> QueryEvaluator::getUsesWynik(Field* field1, Field* field2, vector<in
 	return resultPart;
 }
 
-vector<int> QueryEvaluator::getCallWynik(Field* field1, Field* field2, vector<int> lines, string selectValue) {
-		set<int> candidatesForParameter1;
-		set<int> candidatesForParameter2;
-		set<int> resultPart;
-		vector<int> returnIt;
-		if (field1 == nullptr || field2 == nullptr) {
-			return returnIt;
-		}
-		string firstParameterType = field1->getTyp();
-		string secondParameterType = field2->getTyp();
-		int firstProcedureId = -1;
-		int secondProcedureId = -1;
-
-		//Dla parametru pierwszego tworzy się lista z możliwymi wartościami dla tego parametru
-		if (firstParameterType == "string") {
-			firstProcedureId = pkbApi->getIdProcedury(field1->getWartosc());
-			if (firstProcedureId == -1) {
-				return returnIt;
-			}
-			candidatesForParameter1.insert(firstProcedureId);
-		}
-		else if (firstParameterType == "constant") {
-			firstProcedureId = pkbApi->getIdProcedury(field1->stringNaInt());
-			if (firstProcedureId == -1) {
-				return returnIt;
-			}
-			candidatesForParameter1.insert(firstProcedureId);
-		}
-		else {
-			for (int i = 0; i <= pkbApi->getMaxIdProcedury(); i++) {
-				candidatesForParameter1.insert(i);
-			}
-		}
-
-		//Dla parametru drugiego tworzy się lista z możliwymi wartościami dla tego parametru
-		if (secondParameterType == "string") {
-			secondProcedureId = pkbApi->getIdProcedury(field2->getWartosc());
-			if (secondProcedureId == -1) {
-				return returnIt;
-			}
-			candidatesForParameter2.insert(secondProcedureId);
-		}
-		else if (secondParameterType == "constant") {
-			secondProcedureId = pkbApi->getIdProcedury(field2->stringNaInt());
-			if (secondProcedureId == -1) {
-				return returnIt;
-			}
-			candidatesForParameter2.insert(secondProcedureId);
-		}
-		else {
-			for (int i = 0; i <= pkbApi->getMaxIdProcedury(); i++) {
-				candidatesForParameter2.insert(i);
-			}
-		}
-
-		//Biorąc pod uwage części zapytania z "with", skracana jest lista parametru pierwszego
-		if (field1->getTyp() != "constant" && field1->getTyp() != "any") {
-			candidatesForParameter1 = cutSetLines(field1->getWartosc(), candidatesForParameter1);
-		}
-		//Biorąc pod uwage części zapytania z "with", skracana jest lista parametru drugiego
-		if (field2->getTyp() != "constant" && field2->getTyp() != "any") {
-			candidatesForParameter2 = cutSetLines(field2->getWartosc(), candidatesForParameter2);
-		}
-
-		if (firstParameterType == "constant" && secondParameterType == "constant") {
-			/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
-				resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
-			}
-			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-			return returnIt;*/
-		}
-		else if (firstParameterType == "string"  && secondParameterType == "string") {
-			/*
-			if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
-				resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
-			}
-			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-			return returnIt;*/
-		}
-		else if (firstParameterType == "any" && secondParameterType == "any") {
-			//Jesli "any" spełnia wymagania to wszystkie linie są dobre
-			/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
-				for (int i = 0; i <= pkbApi->getMaxIdProcedury(); i++) {
-					resultPart.insert(pkbApi->getPierwszaLiniaProcedury(i));
-				}
-			}*/
-			//Jeśli "any" nie spełnia wymagań to wszystkie linie są złe (nie ma procedur w programie)
-			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-			return returnIt;
-		}
-		else if (selectValue == field1->getWartosc() && selectValue == field2->getWartosc() && selectValue != "boolean") {
-			//Jeśli w zapytaniu sa dwie takie same wartości, a nie jest to "any" to zwraca pusty wynik, ponieważ nie można wywołać rekurencyjnie
-			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-			return returnIt;
-		}
-		else {
-			for (set<int>::iterator parameter1 = candidatesForParameter1.begin(); parameter1 != candidatesForParameter1.end(); ++parameter1) {
-				for (set<int>::iterator parameter2 = candidatesForParameter2.begin(); parameter2 != candidatesForParameter2.end(); ++parameter2) {
-					/*if (pkbApi->calls(*parameter1, *parameter2) && *parameter1 != *parameter2)
-					{
-						if (selectValue == field1->getWartosc() && selectValue != "boolean") {
-							//Dodaje możliwość z parameter1 do wyniku, gdy call(parmeter1,*) gdzie * = 'any','const','var'
-							if(find(resultPart.begin(),resultPart.end(),pkbApi->getPierwszaLiniaProcedury(*parameter1)) == resultPart.end())
-								resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter1));
-						}
-						else if (selectValue == field2->getWartosc() && selectValue != "boolean") {
-							//Dodaje możliwość z parameter2 do wyniku, gdy call(parmeter2,*) gdzie * = 'any','const','var'
-							if(find(resultPart.begin(),resultPart.end(),pkbApi->getPierwszaLiniaProcedury(*parameter2)) == resultPart.end())
-								resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter2));
-						}
-						else {
-							//Zwraca wszystko, czy call(1,_) lub call(_,1)
-							if (field1->getTyp() != "constant" && field1->getTyp() != "string") {
-								resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter1));
-							}
-							if (field2->getTyp() != "constant" && field2->getTyp() != "string") {
-								resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter2));
-							}
-						}
-					}*/
-				}
-			}
-		}
-		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;
-	}
-
-vector<int> QueryEvaluator::getCallSWynik(Field* field1, Field* field2, vector<int> lines, string selectValue) {
-	set<int> candidatesForParameter1;
-	set<int> candidatesForParameter2;
-	set<int> resultPart;
-	vector<int> returnIt;
-	if (field1 == nullptr || field2 == nullptr) {
-		return returnIt;
-	}
-	else {
-		//cout << "Both fields are != nullptr" << endl;
-	}
-	string firstParameterType = field1->getTyp();
-	string secondParameterType = field2->getTyp();
-	int firstProcedureId = -1;
-	int secondProcedureId = -1;
-
-	//Dla parametru pierwszego tworzona jest lista z możliwymi wartościami dla tego parametru
-	if (firstParameterType == "string") {
-		firstProcedureId = pkbApi->getIdProcedury(field1->getWartosc());
-		if (firstProcedureId == -1) {
-			return returnIt;
-		}
-		candidatesForParameter1.insert(firstProcedureId);
-	}
-	else if (firstParameterType == "constant") {
-		firstProcedureId = pkbApi->getIdProcedury(field1->stringNaInt());
-		if (firstProcedureId == -1) {
-			return returnIt;
-		}
-		candidatesForParameter1.insert(firstProcedureId);
-	}
-	else {
-		for (int i = 0; i < pkbApi->getMaxIdProcedury(); i++) {
-			candidatesForParameter1.insert(i);
-		}
-	}
-
-	//Dla parametru drugiego tworzona jest lista z możliwymi wartościami dla tego parametru
-	if (secondParameterType == "string") {
-		secondProcedureId = pkbApi->getIdProcedury(field2->getWartosc());
-		if (secondProcedureId == -1) {
-			return returnIt;
-		}
-		candidatesForParameter2.insert(secondProcedureId);
-	}
-	else if (secondParameterType == "constant") {
-		secondProcedureId = pkbApi->getIdProcedury(field2->stringNaInt());
-		if (secondProcedureId == -1) {
-			return returnIt;
-		}
-		candidatesForParameter2.insert(secondProcedureId);
-	}
-	else {
-		for (int i = 0; i < pkbApi->getMaxIdProcedury(); i++) {
-			candidatesForParameter2.insert(i);
-		}
-	}
-	
-	//Biorąc pod uwage części zapytania z "with", skracana jest lista parametru pierwszego
-	if (field1->getTyp() != "constant" && field1->getTyp() != "any") {
-		candidatesForParameter1 = cutSetLines(field1->getWartosc(), candidatesForParameter1);
-	}
-	//Biorąc pod uwage części zapytania z "with", skracana jest lista parametru drugiego
-	if (field2->getTyp() != "constant" && field2->getTyp() != "any") {
-		candidatesForParameter2 = cutSetLines(field2->getWartosc(), candidatesForParameter2);
-	}
-
-	if (firstParameterType == "constant" && secondParameterType == "constant") {
-		/*if (pkbApi->callsS(firstProcedureId, secondProcedureId)) {
-			resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
-		}
-		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;*/
-	}
-	else if (firstParameterType == "string"  && secondParameterType == "string") {
-		/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
-			resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
-		}
-		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;*/
-	}
-	else if (firstParameterType == "any" && secondParameterType == "any") {
-		/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
-			for (int i = 0; i <= pkbApi->getMaxIdProcedury(); i++) {
-				resultPart.insert(pkbApi->getPierwszaLiniaProcedury(i));
-			}
-		}*/
-		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;
-	}
-	else if (selectValue == field1->getWartosc() && selectValue == field2->getWartosc() && selectValue != "boolean") {
-		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;
-	}
-	else {
-		for (set<int>::iterator parameter1 = candidatesForParameter1.begin(); parameter1 != candidatesForParameter1.end(); ++parameter1) {
-			for (set<int>::iterator parameter2 = candidatesForParameter2.begin(); parameter2 != candidatesForParameter2.end(); ++parameter2) {
-				/*if (pkbApi->callsS(*parameter1, *parameter2) && *parameter1 != *parameter2)
-				{
-					if (selectValue == field1->getWartosc() && selectValue != "boolean") {
-						//Dodaje możliwość z parameter1 do wyniku, gdy call(parmeter1,*) gdzie * = 'any','const','var'
-						if(find(resultPart.begin(),resultPart.end(),pkbApi->getPierwszaLiniaProcedury(*parameter1)) == resultPart.end())
-							resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter1));
-					}
-					else if (selectValue == field2->getWartosc() && selectValue != "boolean") {
-						//Dodaje możliwość z parameter2 do wyniku, gdy call(parmeter2,*) gdzie * = 'any','const','var'
-						if(find(resultPart.begin(),resultPart.end(),pkbApi->getPierwszaLiniaProcedury(*parameter2)) == resultPart.end())
-							resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter2));
-					}
-					else {
-						//Zwraca wszystko, czy call(1,_) lub call(_,1)
-						if (field1->getTyp() != "constant" && field1->getTyp() != "string") {
-							resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter1));
-						}
-						if (field2->getTyp() != "constant" && field2->getTyp() != "string") {
-							resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter2));
-						}
-					}
-				}*/
-			}
-		}
-	}
-	copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-	return returnIt;
-}
-
 void QueryEvaluator::getWithWynik(Field* field1, Field* field2, vector<int> lines) {
 
 	set<int> setLines1;
@@ -1443,17 +1075,12 @@ void QueryEvaluator::getWithWynik(Field* field1, Field* field2, vector<int> line
 		setLines1.insert(pom.begin(), pom.end());
 		pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 		setLines1.insert(pom.begin(), pom.end());
-		pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-		setLines1.insert(pom.begin(), pom.end());
 	}
 	else if(field1->getTyp() == "while") {
 		setLines1 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 	}
 	else if(field1->getTyp() == "if") {
 		setLines1 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-	}
-	else if(field1->getTyp() == "call") {
-		setLines1 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 	}
 	else if(field1->getTyp() == "assign") {
 		setLines1 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();
@@ -1494,17 +1121,12 @@ void QueryEvaluator::getWithWynik(Field* field1, Field* field2, vector<int> line
 		setLines2.insert(pom.begin(), pom.end());
 		pom = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
 		setLines2.insert(pom.begin(), pom.end());
-		pom = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
-		setLines2.insert(pom.begin(), pom.end());
 	}
 	else if(field2->getTyp() == "while") {
 		setLines2 = pkb->getTablicaLiniiKodu()->getOrderedWhileLines();
 	}
 	else if(field2->getTyp() == "if") {
 		setLines2 = pkb->getTablicaLiniiKodu()->getOrderedIfLines();
-	}
-	else if(field2->getTyp() == "call") {
-		setLines2 = pkb->getTablicaLiniiKodu()->getOrderedCallLines();
 	}
 	else if(field2->getTyp() == "assign") {
 		setLines2 = pkb->getTablicaLiniiKodu()->getOrderedAssignLines();

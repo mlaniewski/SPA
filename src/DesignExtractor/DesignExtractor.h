@@ -12,7 +12,6 @@ private:
 	void setRelacjeParent();
 	void setRelacjeModifies();
 	void setRelacjeUses();
-	void setRelacjeCalls();
 	void setRelacjeNext();
 
 	void setTablicaPetle();
@@ -20,7 +19,6 @@ private:
 	void setTablicaProcedur();
 
 	void setLinieIf();
-	void setLinieCall();
 
 	void whileRecur(tree<tree_node_<ASTNode*>*>::iterator current,
 			tree<tree_node_<ASTNode*>*>::iterator whileNode);

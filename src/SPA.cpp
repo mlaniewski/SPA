@@ -91,8 +91,6 @@ void checkKeyWord() {
 	Syntax::allSynstax[w->keyWord] = w;
 	Syntax* op = new OperandSyntax();
 	Syntax::allSynstax[op->keyWord] = op;
-	Syntax* callS = new CallSyntax();
-	Syntax::allSynstax[callS ->keyWord] = callS ;
 	Syntax* yiff = new IfSyntax();
 	Syntax::allSynstax[yiff->keyWord] = yiff;
 	Syntax* elseS = new ElseSyntax();
@@ -148,6 +146,11 @@ void checkKeyWord() {
 	par->parsers.push_back(div);
 	par->parsers.push_back(multi);
 	par->parsers.push_back(par);
+
+	//wypisz wszystkie Syntax
+	//for (const auto& x : Syntax::allSynstax) {
+    //    std::cout << x.first << ": " << x.second << "\n";
+    // }
 }
 
 

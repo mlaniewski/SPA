@@ -16,7 +16,6 @@ public:
 	int getLiczbaLinii();
 	vector<int> getLinieAssign();
 	map<int, string> getWszystkieLinie();
-	vector<int> getLinieCall();
 	vector<int> getLinieWhile();
 	vector<int> getLinieIf();
 	map<int, vector<int> > getLinieZawartosciWhile();
@@ -34,8 +33,6 @@ public:
 	string getNazwaProcedury(int id);
 
 
-	bool calls(int id1, int id2);
-	bool callsS(int id1, int id2);
 	bool follows(int liNr, int followliNr);
 	bool followsS(int liNr, int followliNr);
 	bool modifies(int liNr1, string varName);

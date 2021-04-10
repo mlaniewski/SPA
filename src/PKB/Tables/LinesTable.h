@@ -16,13 +16,10 @@ public:
 	LinesTable();
 	virtual ~LinesTable();
 	int getLiczbaLinii();
-	string getWywolanaNazwaProcedury(int callLine);
 	vector<int> getLinieAssign();
 	set<int> getOrderedAssignLines();
 	map<int, string> getWszystkieLinie();
 	vector<int> getLines();
-	vector<int> getLinieCall();
-	set<int> getOrderedCallLines();
 	vector<int> getLinieWhile();
 	set<int> getOrderedWhileLines();
 	vector<int> getLinieIf();
@@ -32,12 +29,10 @@ public:
 	string getLineString(int liNr1); // zwraca tekst z danej linii
 	void addWhileLine(int loopLine,int stmtLine);
 	void addIfLine(int ifLine, int stmtLine);
-	void addCallLine(int callLine,string nazwaProcedury);
 	void addAssignLine(int assignLine);
 	void addLine(string text);
 	void wypiszWszystkie();
 	void writeIfLines();
-	void writeCallLines();
 	void writeWhileLines();
 
 
@@ -45,8 +40,6 @@ private:
 	int linesCount;
 	map<int, string> lines;
 	vector<int> assignLines;
-	vector<int> callLines;
-	map<int,string> pkbCallLines;
 	map<int, vector<int>> whileLines;
 	map<int, vector<int>> ifLines;
 

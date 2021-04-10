@@ -25,16 +25,6 @@ vector<int> LinesTable::getLines() {
 	return v;
 }
 
-vector<int> LinesTable::getLinieCall() {
-	return callLines;
-}
-
-set<int> LinesTable::getOrderedCallLines() {
-	set<int> result;
-	result.insert(callLines.begin(), callLines.end());
-	return result;
-}
-
 vector<int> LinesTable::getLinieWhile() {
 	vector<int> v;
 	for (map<int, vector<int>>::iterator it = whileLines.begin();
@@ -101,19 +91,6 @@ void LinesTable::addIfLine(int ifLine, int stmtLine) {
 	ifLines[ifLine].push_back(stmtLine);
 }
 
-void LinesTable::addCallLine(int callLine, string nazwaProcedury) {
-	callLines.push_back(callLine);
-	pkbCallLines[callLine] = nazwaProcedury;
-}
-
-string LinesTable::getWywolanaNazwaProcedury(int callLine) {
-	if ( pkbCallLines.find(callLine) == pkbCallLines.end() ) {
-	  return "";
-	} else {
-		return pkbCallLines.find(callLine)->second;
-	}
-}
-
 void LinesTable::addAssignLine(int assignLine) {
 	assignLines.push_back(assignLine);
 }
@@ -127,13 +104,6 @@ void LinesTable::wypiszWszystkie() {
 	for (map<int, string>::iterator iter = lines.begin(); iter != lines.end();
 			++iter) {
 		cout << (*iter).first << " : " << (*iter).second << endl;
-	}
-}
-
-void LinesTable::writeCallLines() {
-	for (vector<int>::iterator iter = callLines.begin();
-			iter != callLines.end(); ++iter) {
-		cout << (*iter) << endl;
 	}
 }
 

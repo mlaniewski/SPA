@@ -388,27 +388,6 @@ public:
 	}
 };
 
-class CallSyntax: public ProcedureSyntax {
-public:
-	CallSyntax() {
-		keyWord = Keywords::CALL;
-		syntax = {Matcher(keyWord,Matcher::anyWord, Matcher::space), Matcher(Matcher::anyWord,Matcher::space, Matcher::anyWord)};
-		semicolon = true;
-		multiLine = false;
-	}
-
-	ASTTree* parseLine(string str) {
-		vector < string > splitStr = split(str);
-		if (toLower(splitStr[0]) != keyWord) {
-			return NULL;
-		}
-		vector < string > args = match(str);
-		ASTTree* node = NodeUtil::createCallNode(args[0], currLine);
-		(*(node->getKorzenDrzewa()))->data->closed = getNawias();
-		return node;
-	}
-};
-
 class IfSyntax: public Syntax {
 public:
 	IfSyntax() {

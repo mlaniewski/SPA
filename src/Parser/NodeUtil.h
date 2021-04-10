@@ -4,11 +4,6 @@
 class NodeUtil {
 	public:
 
-	static ASTTree* createCallNode(string name, int lineNumber) {
-		ASTNode* node = new ASTNode(0, NodeName::CALL, lineNumber, name);
-		return createTree(node);
-	}
-
 	static ASTTree* createAssignmentNode(int lineNumber) {
 		ASTNode* node = new ASTNode(0, NodeName::ASSIGN, lineNumber);
 		return createTree(node);

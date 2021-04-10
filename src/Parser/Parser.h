@@ -22,7 +22,7 @@ public:
 			linesTable->addLine(line);
 			count++;
 			parseLine(line);
-//			root->printTree();
+			root->printTree();
 		}
 	}
 
@@ -36,7 +36,6 @@ public:
 			fileExists = true;
 			parsers.push_back(Syntax::allSynstax[Keywords::PROCEDURE]);
 			parsers.push_back(Syntax::allSynstax[Keywords::WHILE]);
-			parsers.push_back(Syntax::allSynstax[Keywords::CALL]);
 			parsers.push_back(Syntax::allSynstax[Keywords::ASSIGN]);
 			parsers.push_back(Syntax::allSynstax[Keywords::IF]);
 

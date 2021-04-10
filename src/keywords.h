@@ -4,7 +4,6 @@
 class NodeName {
 public:
 	static string ASSIGN;
-	static string CALL;
 	static string ELSE;
 	static string EXPR;
 	static string FAKE_CLOSE;
@@ -17,7 +16,6 @@ public:
 	static string WHILE;
 };
 string NodeName::ASSIGN = "ASSIGN";
-string NodeName::CALL = "CALL";
 string NodeName::ELSE = "ELSE";
 string NodeName::EXPR = "EXPR";
 string NodeName::FAKE_CLOSE = "FAKE_CLOSE";
@@ -32,7 +30,6 @@ string NodeName::WHILE = "WHILE";
 class Keywords {
 public:
 	static string ASSIGN;
-	static string CALL;
 	static string ELSE;
 	static string EXPR;
 	static string IF;
@@ -44,7 +41,6 @@ public:
 };
 
 string Keywords::ASSIGN = "=";
-string Keywords::CALL = "call";
 string Keywords::ELSE = "else";
 string Keywords::EXPR = "expr";
 string Keywords::IF = "if";

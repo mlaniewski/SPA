@@ -37,10 +37,6 @@ public:
 			vector<int> lines, string selectValue);
 	vector<int> getParentSWynik(Field* field1, Field* field2,
 			vector<int> lines, string selectValue);
-	vector<int> getCallWynik(Field* field1, Field* field2, vector<int> lines,
-			string selectValue);
-	vector<int> getCallSWynik(Field* field1, Field* field2,
-			vector<int> lines, string selectValue);
 	void getWithWynik(Field* field1, Field* field2,
 				vector<int> lines);
 private:

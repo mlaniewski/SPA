@@ -24,10 +24,6 @@ map<int, string> PKBApi::getWszystkieLinie(){
 	return pkb -> getTablicaLiniiKodu() -> getWszystkieLinie();
 }
 
-vector<int> PKBApi::getLinieCall(){
-	return pkb -> getTablicaLiniiKodu() -> getLinieCall();
-}
-
 vector<int> PKBApi::getLinieWhile(){
 	return pkb -> getTablicaLiniiKodu() -> getLinieWhile();
 }

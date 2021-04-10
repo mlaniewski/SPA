@@ -57,7 +57,6 @@ public:
 			|| field1->getTyp() == "assign"
 			|| field1->getTyp() == "while"
 			|| field1->getTyp() == "if"
-			|| field1->getTyp() == "call"
 			|| field1->getTyp() == "prog_line") && field1->czyStatement()) type1 = "integer";
 		if(field1->getTyp() == "string") type1 = "string";
 
@@ -69,7 +68,6 @@ public:
 			|| field2->getTyp() == "assign"
 			|| field2->getTyp() == "while"
 			|| field2->getTyp() == "if"
-			|| field2->getTyp() == "call"
 			|| field2->getTyp() == "prog_line") && field2->czyStatement()) type2 = "integer";
 		if(field2->getTyp() == "string") type2 = "string";
 
@@ -83,7 +81,7 @@ public:
 
 	vector<string> getTokensList()
 	{
-		return {"assign","stmtlst","stmt","while","variable","constant","prog_line","if","call","procedure"};
+		return {"assign","stmtlst","stmt","while","variable","constant","prog_line","if","procedure"};
 	}
 
 	string checkSuchThatType(string suchThatPart) {
@@ -91,7 +89,6 @@ public:
 		if(checkTokens(suchThatPart,"Follows")) return "follows";
 		if(checkTokens(suchThatPart,"Modifies")) return "modifies";
 		if(checkTokens(suchThatPart,"Uses")) return "uses";
-		if(checkTokens(suchThatPart,"Calls")) return "calls";
 		if(checkTokens(suchThatPart,"Next")) return "next";
 		if(checkTokens(suchThatPart,"Affects")) return "affects";
 
