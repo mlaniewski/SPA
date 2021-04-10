@@ -6,7 +6,6 @@
 #include<map>
 #include<set>
 
-#include "../Relations/Calls.h"
 using namespace std;
 
 class ProcTable {
@@ -25,7 +24,6 @@ public:
 	virtual vector<int> getProceduresLines();
 	virtual map<int, vector<int>> getProceduresBodyLines();
 	virtual vector<int> getLinieProcedury(int idProcedury);
-	virtual set<int> getAllLinieProcedury(int idProcedury, Calls * calls);
 	virtual void addProcBodyLine(int procStartLine, int stmtLine);
 
 private:
@@ -33,8 +31,6 @@ private:
 	vector<int> proceduresStartLines;
 	map<int, vector<int>> proceduresLines;
 	int idProcedury;
-
-	set<int> procedureRecur(int idProcedury, Calls * calls, set<int> procedureLines, bool visited[]);
 
 };
 

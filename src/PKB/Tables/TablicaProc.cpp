@@ -92,27 +92,3 @@ vector<int> ProcTable::getLinieProcedury(int procId) {
 	vector<int> empty;
 	return empty;
 }
-
-set<int> ProcTable::getAllLinieProcedury(int idProcedury, Calls * calls) {
-	bool visited[idProcedury];
-	for(int i=0; i<idProcedury; i++)
-			visited[i] = false;
-	set<int> procedureLines;
-	procedureLines = procedureRecur(idProcedury, calls, procedureLines, visited);
-	return procedureLines;
-}
-
-set<int> ProcTable::procedureRecur(int idProcedury, Calls * calls, set<int> procedureLines, bool visited[]) {
-	vector<int> temp = getLinieProcedury(idProcedury);
-	for(int i : temp){
-		procedureLines.insert(i);
-	}
-
-	for(int i : (calls -> getCall(idProcedury))) {
-		if(!visited[i]) {
-			visited[i] = true;
-			procedureLines = procedureRecur(i, calls, procedureLines, visited);
-		}
-	}
-	return procedureLines;
-}

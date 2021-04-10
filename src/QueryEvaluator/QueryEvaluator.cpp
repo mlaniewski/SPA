@@ -1242,26 +1242,27 @@ vector<int> QueryEvaluator::getCallWynik(Field* field1, Field* field2, vector<in
 		}
 
 		if (firstParameterType == "constant" && secondParameterType == "constant") {
-			if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
+			/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
 				resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
 			}
 			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-			return returnIt;
+			return returnIt;*/
 		}
 		else if (firstParameterType == "string"  && secondParameterType == "string") {
+			/*
 			if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
 				resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
 			}
 			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-			return returnIt;
+			return returnIt;*/
 		}
 		else if (firstParameterType == "any" && secondParameterType == "any") {
 			//Jesli "any" spełnia wymagania to wszystkie linie są dobre
-			if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
+			/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
 				for (int i = 0; i <= pkbApi->getMaxIdProcedury(); i++) {
 					resultPart.insert(pkbApi->getPierwszaLiniaProcedury(i));
 				}
-			}
+			}*/
 			//Jeśli "any" nie spełnia wymagań to wszystkie linie są złe (nie ma procedur w programie)
 			copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
 			return returnIt;
@@ -1274,7 +1275,7 @@ vector<int> QueryEvaluator::getCallWynik(Field* field1, Field* field2, vector<in
 		else {
 			for (set<int>::iterator parameter1 = candidatesForParameter1.begin(); parameter1 != candidatesForParameter1.end(); ++parameter1) {
 				for (set<int>::iterator parameter2 = candidatesForParameter2.begin(); parameter2 != candidatesForParameter2.end(); ++parameter2) {
-					if (pkbApi->calls(*parameter1, *parameter2) && *parameter1 != *parameter2)
+					/*if (pkbApi->calls(*parameter1, *parameter2) && *parameter1 != *parameter2)
 					{
 						if (selectValue == field1->getWartosc() && selectValue != "boolean") {
 							//Dodaje możliwość z parameter1 do wyniku, gdy call(parmeter1,*) gdzie * = 'any','const','var'
@@ -1295,7 +1296,7 @@ vector<int> QueryEvaluator::getCallWynik(Field* field1, Field* field2, vector<in
 								resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter2));
 							}
 						}
-					}
+					}*/
 				}
 			}
 		}
@@ -1371,25 +1372,25 @@ vector<int> QueryEvaluator::getCallSWynik(Field* field1, Field* field2, vector<i
 	}
 
 	if (firstParameterType == "constant" && secondParameterType == "constant") {
-		if (pkbApi->callsS(firstProcedureId, secondProcedureId)) {
+		/*if (pkbApi->callsS(firstProcedureId, secondProcedureId)) {
 			resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
 		}
 		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;
+		return returnIt;*/
 	}
 	else if (firstParameterType == "string"  && secondParameterType == "string") {
-		if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
+		/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
 			resultPart.insert(pkbApi->getPierwszaLiniaProcedury(firstProcedureId));
 		}
 		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
-		return returnIt;
+		return returnIt;*/
 	}
 	else if (firstParameterType == "any" && secondParameterType == "any") {
-		if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
+		/*if (pkbApi->calls(firstProcedureId, secondProcedureId)) {
 			for (int i = 0; i <= pkbApi->getMaxIdProcedury(); i++) {
 				resultPart.insert(pkbApi->getPierwszaLiniaProcedury(i));
 			}
-		}
+		}*/
 		copy(resultPart.begin(), resultPart.end(), back_inserter(returnIt));
 		return returnIt;
 	}
@@ -1400,7 +1401,7 @@ vector<int> QueryEvaluator::getCallSWynik(Field* field1, Field* field2, vector<i
 	else {
 		for (set<int>::iterator parameter1 = candidatesForParameter1.begin(); parameter1 != candidatesForParameter1.end(); ++parameter1) {
 			for (set<int>::iterator parameter2 = candidatesForParameter2.begin(); parameter2 != candidatesForParameter2.end(); ++parameter2) {
-				if (pkbApi->callsS(*parameter1, *parameter2) && *parameter1 != *parameter2)
+				/*if (pkbApi->callsS(*parameter1, *parameter2) && *parameter1 != *parameter2)
 				{
 					if (selectValue == field1->getWartosc() && selectValue != "boolean") {
 						//Dodaje możliwość z parameter1 do wyniku, gdy call(parmeter1,*) gdzie * = 'any','const','var'
@@ -1421,7 +1422,7 @@ vector<int> QueryEvaluator::getCallSWynik(Field* field1, Field* field2, vector<i
 							resultPart.insert(pkbApi->getPierwszaLiniaProcedury(*parameter2));
 						}
 					}
-				}
+				}*/
 			}
 		}
 	}

@@ -82,19 +82,6 @@ vector<int> PKBApi::getLinieProcedury(int idProcedury) {
 	return pkb -> getTablicaProcedur() -> getLinieProcedury(idProcedury);
 }
 
-set<int> PKBApi::getAllLinieProcedury(int idProcedury) {
-	return pkb -> getTablicaProcedur() -> getAllLinieProcedury(idProcedury, pkb -> getCalls());
-}
-
-bool PKBApi::calls(int id1, int id2) {
-	return pkb -> getCalls() -> calls(id1, id2);
-}
-
-bool PKBApi::callsS(int id1, int id2) {
-	return pkb -> getCalls() -> callsS(id1, id2);
-}
-
-
 bool PKBApi::follows(int liNr, int followliNr){
 	return pkb -> getFollows() -> follows(liNr, followliNr);
 }

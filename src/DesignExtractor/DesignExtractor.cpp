@@ -17,9 +17,7 @@ void DesignExtractor::start() {
 	setRelacjeModifies();
 	setRelacjeUses();
 	setLinieIf();
-	setLinieCall();
 	setTablicaProcedur();
-	setRelacjeCalls();
 	setRelacjeNext();
 }
 
@@ -355,49 +353,6 @@ void DesignExtractor::ifRecur(tree<tree_node_<ASTNode*>*>::iterator current,
 	}
 
 }
-void DesignExtractor::setLinieCall() {
-
-	ASTTree * ASTtree = pkb->getDrzewoAST();
-	LinesTable * linesTable = pkb->getTablicaLiniiKodu();
-
-	tree<tree_node_<ASTNode*>*>::iterator begin = ASTtree->getKorzenDrzewa();
-	tree<tree_node_<ASTNode*>*>::iterator end = ASTtree->getKoniec();
-
-	while (begin != end) {
-		if (ASTtree->czyPrawidlowe(begin) && (*begin)->data->type == "CALL") {
-			if (!(*begin)->data) {
-				cout << "error <set call's>" << endl;
-			} else {
-				linesTable->addCallLine((*begin)->data->liNr1,
-						(*begin)->data->value);
-			}
-		}
-		++begin;
-	}
-
-}
-
-void DesignExtractor::setRelacjeCalls() {
-	ASTTree * ASTtree = pkb->getDrzewoAST();
-	ProcTable * procTable = pkb->getTablicaProcedur();
-	Calls* calls = pkb->getCalls();
-
-	tree<tree_node_<ASTNode*>*>::iterator begin = ASTtree->getKorzenDrzewa();
-	tree<tree_node_<ASTNode*>*>::iterator end = ASTtree->getKoniec();
-	int idProcedury = -1;
-
-	while (begin != end) {
-		if (ASTtree->czyPrawidlowe(begin) && (*begin)->data) {
-			if ((*begin)->data->type == "PROCEDURE") {
-				idProcedury = procTable->getIdProcedury((*begin)->data->value);
-			} else if (idProcedury != -1 && (*begin)->data->type == "CALL") {
-				calls->addCall(idProcedury,
-						procTable->getIdProcedury((*begin)->data->value));
-			}
-		}
-		++begin;
-	}
-}
 
 void DesignExtractor::setTablicaProcedur() {
 
@@ -481,7 +436,7 @@ void DesignExtractor::setRelacjeNext() {
 
 	while (begin != end) {
 		if (ASTtree->czyPrawidlowe(begin) && (*begin)->data) {
-			if ((*begin)->data->type == "ASSIGN" || (*begin)->data->type == "CALL") {
+			if ((*begin)->data->type == "ASSIGN") {
 				tmp = begin.node -> next_sibling;
 				if(ASTtree->czyPrawidlowe(tmp) && (*tmp)->data) {
 					next->addNext((*begin)->data->liNr1, (*tmp)->data->liNr1);
