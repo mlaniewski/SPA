@@ -121,11 +121,6 @@ vector<string> QueryEvaluator::getWynik(PQLTree *Tree) {
 						isUses = true;
 					}
 				}
-
-				if ((*begin)->data->getNodeType() == "affects") {
-					vector<int> empty;
-					lines = empty;
-				}
 			}
 
 			if(((*begin)->data->getType()) == "withNode") {

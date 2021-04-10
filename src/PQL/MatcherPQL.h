@@ -89,7 +89,6 @@ public:
 		if(checkTokens(suchThatPart,"Follows")) return "follows";
 		if(checkTokens(suchThatPart,"Modifies")) return "modifies";
 		if(checkTokens(suchThatPart,"Uses")) return "uses";
-		if(checkTokens(suchThatPart,"Affects")) return "affects";
 
 		return "";
 	}
