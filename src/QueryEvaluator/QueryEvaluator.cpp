@@ -122,7 +122,7 @@ vector<string> QueryEvaluator::getWynik(PQLTree *Tree) {
 					}
 				}
 
-				if ((*begin)->data->getNodeType() == "affects" || (*begin)->data->getNodeType() == "next") {
+				if ((*begin)->data->getNodeType() == "affects") {
 					vector<int> empty;
 					lines = empty;
 				}

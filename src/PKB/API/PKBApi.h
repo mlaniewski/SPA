@@ -36,8 +36,6 @@ public:
 	bool follows(int liNr, int followliNr);
 	bool followsS(int liNr, int followliNr);
 	bool modifies(int liNr1, string varName);
-	bool next(int liNr1, int nextliNr);
-	bool nextS(int liNr1, int nextliNr);
 	bool parent(int parentliNr, int kidliNr);
 	bool parentS(int parentliNr, int kidliNr);
 	bool uses(int liNr1, string varName);

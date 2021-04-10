@@ -12,7 +12,6 @@ private:
 	void setRelacjeParent();
 	void setRelacjeModifies();
 	void setRelacjeUses();
-	void setRelacjeNext();
 
 	void setTablicaPetle();
 	void setTablicaAssign();
